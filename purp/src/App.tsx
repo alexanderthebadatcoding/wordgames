@@ -21,50 +21,34 @@ interface Game {
   league: string;
 }
 
-interface GameDataItem {
-  sport: string;
-  league: string;
-}
-
-// Configure your games data here
-// Format: { "gameId": { sport, league } }
-const gamesData: Record<string, GameDataItem> = {
-  "401810122": {
-    sport: "basketball",
-    league: "nba",
-  },
-  "401811098": {
-    sport: "basketball",
-    league: "mens-college-basketball",
-  },
-  "401819836": {
-    sport: "basketball",
-    league: "mens-college-basketball",
-  },
-  "401812263": {
-    sport: "basketball",
-    league: "mens-college-basketball",
-  },
-  "401772946": {
-    sport: "football",
-    league: "nfl",
-  },
-  "401752778": {
-    sport: "football",
-    league: "college-football",
-  },
-  "401752911": {
-    sport: "football",
-    league: "college-football",
-  },
-  "748272": {
-    sport: "soccer",
-    league: "esp.1",
-  },
-  "740712": {
-    sport: "soccer",
-    league: "eng.1",
-  },
+// Store picks/notes data (you can replace this with an API call or database)
+const picksData: Record<string, Array<{ picker: string; pick: string }>> = {
+  "401772635": [
+    { picker: "@swim", pick: "Jacksonville over LAR ML (2.38)" },
+    { picker: "@trizsamae", pick: "Jacksonville over LAR ML (2.38)" },
+    { picker: "@ariabella", pick: "Jacksonville over LAR ML (2.38)" },
+    { picker: "@petcel", pick: "Jacksonville over LAR ML (2.38)" },
+  ],
+  "401772862": [
+    { picker: "@qt", pick: "Minnesota over Philadelphia ML (2.08)" },
+  ],
+  "401772860": [
+    { picker: "@purp", pick: "Carolina over New York Jets ML (1.86)" },
+    { picker: "@ghostbo4.eth", pick: "Carolina over New York Jets ML (1.86)" },
+    { picker: "@syskey", pick: "Carolina over New York Jets ML (1.86)" },
+    { picker: "@todemashi", pick: "Carolina over New York Jets ML (1.86)" },
+  ],
+  "401772756": [
+    { picker: "@gilbster", pick: "Colts over Chargers ML (2.10)" },
+    { picker: "@pgilb", pick: "Colts over Chargers ML (2.10)" },
+  ],
+  "401772826": [
+    { picker: "@augustuscaesar", pick: "Seattle over Texans ML (1.54)" },
+    { picker: "@chikay", pick: "Seattle over Texans ML (1.54)" },
+    { picker: "@degencummunist.eth", pick: "Seattle over Texans ML (1.54)" },
+    { picker: "@garrett", pick: "Seattle over Texans ML (1.54)" },
+    { picker: "@matthew.eth", pick: "Seattle over Texans ML (1.54)" },
+  ],
 };
 
 export default function App() {
@@ -108,18 +92,11 @@ export default function App() {
                 awayTeamLogo:
                   awayTeam.team?.logo || awayTeam.team?.logos?.[0]?.href || "",
                 status: competition.status?.type?.detail || "Scheduled",
-                startDate:
-                  competition.date || header.date || new Date().toISOString(),
-                homeScore: parseInt(homeTeam.score) || 0,
-                awayScore: parseInt(awayTeam.score) || 0,
-                competitionName: header.competitions?.[0]?.competitors?.[0]
-                  ?.team?.displayName
-                  ? `${awayTeam.team?.displayName} @ ${homeTeam.team?.displayName}`
-                  : header.league?.name || "Game",
-                description:
-                  competition.status?.type?.shortDetail ||
-                  competition.status?.type?.name ||
-                  "",
+                startDate: event.date || new Date().toISOString(),
+                homeScore: homeTeam.score,
+                awayScore: awayTeam.score,
+                competitionName: event.shortName || "NFL Week 7",
+                description: competition.status?.type?.shortDetail || "",
                 awayWinner:
                   competition.status?.type?.completed && awayTeam.winner,
                 homeWinner:
