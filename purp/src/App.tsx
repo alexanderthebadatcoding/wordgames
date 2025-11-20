@@ -17,6 +17,8 @@ interface Game {
   description: string;
   awayWinner?: boolean;
   homeWinner?: boolean;
+  sport: string;
+  league: string;
 }
 
 // Store picks/notes data (you can replace this with an API call or database)
@@ -57,29 +59,38 @@ export default function App() {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const res = await fetch(
-          "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
-        );
-        const data = await res.json();
-
-        const formattedGames: Game[] = (data.events || [])
-          .map((event: any) => {
+        const fetchedGames = await Promise.all(
+          Object.entries(gamesData).map(async ([id, data]) => {
             try {
-              const competition = event.competitions?.[0];
+              const url = `https://site.api.espn.com/apis/site/v2/sports/${data.sport}/${data.league}/summary?event=${id}`;
+              const res = await fetch(url);
+              const gameData = await res.json();
+
+              const header = gameData.header;
+              if (!header) return null;
+
+              const competition = header.competitions?.[0];
               if (!competition) return null;
 
-              const homeTeam = competition.competitors?.[0];
-              const awayTeam = competition.competitors?.[1];
-              console.log("Home Team:", homeTeam);
+              const homeTeam = competition.competitors?.find(
+                (c: any) => c.homeAway === "home"
+              );
+              const awayTeam = competition.competitors?.find(
+                (c: any) => c.homeAway === "away"
+              );
 
               if (!homeTeam || !awayTeam) return null;
 
               return {
-                id: event.id,
-                homeTeam: homeTeam.team?.name || "Home",
-                awayTeam: awayTeam.team?.name || "Away",
-                homeTeamLogo: homeTeam.team?.logo || "",
-                awayTeamLogo: awayTeam.team?.logo || "",
+                id: header.id,
+                homeTeam:
+                  homeTeam.team?.displayName || homeTeam.team?.name || "Home",
+                awayTeam:
+                  awayTeam.team?.displayName || awayTeam.team?.name || "Away",
+                homeTeamLogo:
+                  homeTeam.team?.logo || homeTeam.team?.logos?.[0]?.href || "",
+                awayTeamLogo:
+                  awayTeam.team?.logo || awayTeam.team?.logos?.[0]?.href || "",
                 status: competition.status?.type?.detail || "Scheduled",
                 startDate: event.date || new Date().toISOString(),
                 homeScore: homeTeam.score,
@@ -87,31 +98,59 @@ export default function App() {
                 competitionName: event.shortName || "NFL Week 7",
                 description: competition.status?.type?.shortDetail || "",
                 awayWinner:
-                  competition.status?.type?.detail === "Final" &&
-                  awayTeam.winner,
+                  competition.status?.type?.completed && awayTeam.winner,
                 homeWinner:
-                  competition.status?.type?.detail === "Final" &&
-                  homeTeam.winner,
+                  competition.status?.type?.completed && homeTeam.winner,
+                sport: data.sport,
+                league: data.league,
               };
             } catch (e) {
+              console.error(`Failed to fetch game ${id}:`, e);
               return null;
             }
           })
-          .filter(Boolean) as Game[];
-
-        // setGames(formattedGames);
-        const allowedIds = [
-          "401772635",
-          "401772862",
-          "401772860",
-          "401772756",
-          "401772826",
-          // "401772941",
-        ];
-        const filteredGames = formattedGames.filter((game) =>
-          allowedIds.includes(game.id)
         );
-        setGames(filteredGames);
+
+        const validGames = fetchedGames.filter(Boolean) as Game[];
+
+        // Sort games: Live first, then upcoming, then completed
+        const sortedGames = validGames.sort((a, b) => {
+          const getStatusPriority = (game: Game) => {
+            const status = game.status.toLowerCase();
+            // Live games (in progress)
+            if (
+              status.includes("quarter") ||
+              status.includes("half") ||
+              status.includes("period") ||
+              status.includes("inning") ||
+              status.includes("live") ||
+              status.includes("progress")
+            ) {
+              return 1;
+            }
+            // Completed games
+            if (status.includes("final") || status.includes("completed")) {
+              return 3;
+            }
+            // Upcoming games (scheduled)
+            return 2;
+          };
+
+          const priorityA = getStatusPriority(a);
+          const priorityB = getStatusPriority(b);
+
+          // If different priorities, sort by priority
+          if (priorityA !== priorityB) {
+            return priorityA - priorityB;
+          }
+
+          // If same priority, sort by start date
+          return (
+            new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+          );
+        });
+
+        setGames(sortedGames);
       } catch (err: any) {
         setError(err.message || "Failed to load games");
       } finally {
@@ -122,103 +161,106 @@ export default function App() {
     fetchGames();
   }, []);
 
+  const getSportIcon = (sport: string) => {
+    const icons: Record<string, string> = {
+      football: "🏈",
+      basketball: "🏀",
+      soccer: "⚽",
+      baseball: "⚾",
+      hockey: "🏒",
+    };
+    return icons[sport] || "🎮";
+  };
+
   return (
-    <div className="min-h-screen dark:bg-background text-foreground p-4 sm:p-6">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center text-blue-900 dark:text-blue-100">
-        🏈 The Purp Games 💸
-      </h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-4 sm:p-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-center bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+          Bracky Live Games
+        </h1>
+        <p className="text-center text-slate-400 mb-6">
+          Track picks across all sports
+        </p>
 
-      {loading && (
-        <p className="text-center text-muted-foreground">Loading games...</p>
-      )}
-      {error && <p className="text-center text-destructive">Error: {error}</p>}
-      {!loading && !error && games.length === 0 && (
-        <p className="text-center text-muted-foreground">No games available.</p>
-      )}
+        {loading && (
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+            <p className="text-slate-400 mt-2">Loading games...</p>
+          </div>
+        )}
 
-      <ScrollArea className="h-auto">
-        <div className="grid gap-4 sm:max-w-3xl mx-auto">
-          {games.map((game) => (
-            <Card
-              key={game.id}
-              className="shadow-md hover:shadow-lg transition-shadow bg-white dark:bg-indigo-950 border-blue-200 dark:border-indigo-900"
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg sm:text-xl font-semibold">
-                    {game.competitionName}
-                  </CardTitle>
-                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-blue-100 dark:bg-background text-blue-900 dark:text-blue-100">
-                    {game.description}
-                  </span>
-                </div>
-              </CardHeader>
+        {error && (
+          <div className="bg-red-500/10 border border-red-500 rounded-lg p-4 text-center">
+            <p className="text-red-400">Error: {error}</p>
+          </div>
+        )}
 
-              <CardContent className="flex flex-col gap-4">
-                <div className="flex w-full justify-around gap-4">
-                  {/* Away Team */}
-                  <div className="flex flex-col items-center justify-center w-1/2 p-4 bg-blue-50 dark:bg-background rounded-lg">
-                    <img
-                      src={game.awayTeamLogo}
-                      alt={game.awayTeam}
-                      className="w-12 h-12 mb-2 object-contain"
-                    />
-                    <div className="font-bold text-lg text-center">
-                      {game.awayTeam} {game.awayWinner ? "🏆" : ""}
+        {!loading && !error && games.length === 0 && (
+          <div className="text-center text-slate-400 bg-slate-800/50 rounded-lg p-8">
+            <p className="text-lg">No games available.</p>
+            <p className="text-sm mt-2">
+              Add games to gamesData to see matchups here.
+            </p>
+          </div>
+        )}
+
+        <ScrollArea className="h-auto">
+          <div className="grid gap-4">
+            {games.map((game) => (
+              <Card
+                key={game.id}
+                className="shadow-xl bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all"
+              >
+                <CardHeader>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <CardTitle className="text-lg sm:text-xl font-semibold text-white flex items-center gap-2">
+                      <span>{getSportIcon(game.sport)}</span>
+                      {game.competitionName}
+                    </CardTitle>
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                      {game.description}
+                    </span>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="flex flex-col gap-4">
+                  <div className="flex w-full justify-around gap-4">
+                    {/* Away Team */}
+                    <div className="flex flex-col items-center justify-center w-1/2 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
+                      <img
+                        src={game.awayTeamLogo}
+                        alt={game.awayTeam}
+                        className="w-16 h-16 mb-2 object-contain"
+                      />
+                      <div className="font-bold text-base text-center text-white">
+                        {game.awayTeam} {game.awayWinner ? "🏆" : ""}
+                      </div>
+                      <div className="text-3xl font-bold text-amber-400 mt-2">
+                        {game.awayScore ?? "-"}
+                      </div>
                     </div>
-                    <div className="text-2xl font-bold text-white dark:text-white mt-1">
-                      {game.awayScore ?? "-"}
+
+                    {/* Home Team */}
+                    <div className="flex flex-col items-center justify-center w-1/2 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
+                      <img
+                        src={game.homeTeamLogo}
+                        alt={game.homeTeam}
+                        className="w-16 h-16 mb-2 object-contain"
+                      />
+                      <div className="font-bold text-base text-center text-white">
+                        {game.homeTeam} {game.homeWinner ? "🏆" : ""}
+                      </div>
+                      <div className="text-3xl font-bold text-amber-400 mt-2">
+                        {game.homeScore ?? "-"}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Home Team */}
-                  <div className="flex flex-col items-center justify-center w-1/2 p-4 bg-blue-50 dark:bg-background rounded-lg">
-                    <img
-                      src={game.homeTeamLogo}
-                      alt={game.homeTeam}
-                      className="w-12 h-12 mb-2 object-contain"
-                    />
-                    <div className="font-bold text-lg text-center">
-                      {game.homeTeam} {game.homeWinner ? "🏆" : ""}
-                    </div>
-                    <div className="text-2xl font-bold text-white dark:text-white mt-1">
-                      {game.homeScore ?? ""}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-indigo-900">
-                  <p className="text-xl font-semibold text-muted-foreground mb-2">
-                    PICKS
-                  </p>
-                  {(() => {
-                    const grouped = (picksData[game.id] || []).reduce(
-                      (acc: Record<string, string[]>, pick) => {
-                        if (!acc[pick.pick]) acc[pick.pick] = [];
-                        acc[pick.pick].push(pick.picker);
-                        return acc;
-                      },
-                      {}
-                    );
-
-                    return Object.entries(grouped).map(
-                      ([pickName, pickers]) => (
-                        <div key={pickName} className="text-md text-white mb-1">
-                          <span className="font-semibold">{pickName}</span>{" "}
-                          picked by{" "}
-                          <span className="font-semibold">
-                            {pickers.join(", ")}
-                          </span>{" "}
-                        </div>
-                      )
-                    );
-                  })()}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </ScrollArea>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 }

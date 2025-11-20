@@ -21,15 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <App />
     <footer>
       <div className="flex items-center justify-center flex-col">
-        sponsored by{" "}
-        <a href="https://overtime.io" className="hover:text-accent underline">
-          overtime.io
-        </a>{" "}
-        <img
-          src="https://purp-games.vercel.app/overtime.png"
-          alt="Overtime Logo"
-          className="p-2"
-        />
+        <a href="https://bracky.app" className="hover:text-accent underline">
+          Check Bracky for prices
+        </a>
       </div>
     </footer>
   </React.StrictMode>

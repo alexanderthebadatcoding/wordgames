@@ -2,7 +2,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  background-color: #1a032d;
+  background-color: #0b032d;
   color: rgba(255, 255, 255, 0.87);
   color-scheme: light dark;
   font-family: Inter, system-ui, Helvetica, Arial, sans-serif;
@@ -16,7 +16,7 @@
   -webkit-text-size-adjust: 100%;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
+  --foreground: oklch(14.077% 0.0044 285.776);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
@@ -87,15 +87,15 @@
 }
 
 .dark {
-  --background: oklch(14.28% 0.06052 309.274);
+  --background: oklch(19.871% 0.06014 142.034);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(24.144% 0.09514 294.284);
+  --card: oklch(29.815% 0.05561 243.78);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
-  --secondary: oklch(23.238% 0.09828 298.756);
+  --primary-foreground: oklch(22.097% 0.00568 106.931);
+  --secondary: oklch(29.155% 0.05495 239.301);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
   --muted-foreground: oklch(71.322% 0.01762 322.519);
@@ -121,7 +121,7 @@
 }
 
 footer {
-  background-color: #11020e;
+  background-color: #020411;
   color: white;
   font-style: italic;
   text-align: center;
