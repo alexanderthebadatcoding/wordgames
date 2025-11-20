@@ -1,1 +1,22 @@
-{}
+{
+  "frame": {
+    "name": "Bracky Live Score Checker",
+    "version": "1",
+    "iconUrl": "https://bracky-games.vercel.app/icon.png",
+    "homeUrl": "https://bracky-games.vercel.app",
+    "imageUrl": "https://bracky-games.vercel.app/image.png",
+    "buttonTitle": "Check Live Scores",
+    "splashImageUrl": "https://bracky-games.vercel.app/splash.png",
+    "splashBackgroundColor": "#26334A",
+    "webhookUrl": "https://bracky-games.vercel.app/api/webhook",
+    "description": "Check Live scores for bracky matchups.",
+    "primaryCategory": "games",
+    "subtitle": "created by @gilbster",
+    "tags": ["bracky", "sports", "scores"]
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjMxOTA1NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDZENTEwMENEMDVlMzc4N0Q0QWQ4Qzk0NDA2QzhCNWVlMTUzOTU3MjUifQ",
+    "payload": "eyJkb21haW4iOiJicmFja3ktZ2FtZXMudmVyY2VsLmFwcCJ9",
+    "signature": "5zQCM+3IyODM9ZnB2LdEmLcYNBjipaFvcs51bvyzjvJLPgWJaEDKslP0uz2G+AnJnA/aJn9tA5zurdOkNb6jaxs="
+  }
+}
