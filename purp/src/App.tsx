@@ -6,7 +6,9 @@ import { sdk } from "@farcaster/miniapp-sdk";
 interface Game {
   id: string;
   homeTeam: string;
+  homeAbbr: string;
   awayTeam: string;
+  awayAbbr: string;
   homeTeamLogo: string;
   awayTeamLogo: string;
   status: string;
@@ -95,6 +97,15 @@ export default function App() {
                 (c: any) => c.homeAway === "away"
               );
 
+              const homeAbbr =
+                homeTeam?.team?.abbreviation ||
+                homeTeam?.team?.shortName ||
+                "HOME";
+              const awayAbbr =
+                awayTeam?.team?.abbreviation ||
+                awayTeam?.team?.shortName ||
+                "AWAY";
+
               if (!homeTeam || !awayTeam) return null;
 
               return {
@@ -114,7 +125,7 @@ export default function App() {
                 awayScore: parseInt(awayTeam.score) || 0,
                 competitionName: header.competitions?.[0]?.competitors?.[0]
                   ?.team?.displayName
-                  ? `${awayTeam.team?.displayName} @ ${homeTeam.team?.displayName}`
+                  ? `${awayAbbr} at ${homeAbbr}`
                   : header.league?.name || "Game",
                 description:
                   competition.status?.type?.shortDetail ||
