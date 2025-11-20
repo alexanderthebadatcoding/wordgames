@@ -51,6 +51,14 @@ const gamesData: Record<string, GameDataItem> = {
     sport: "football",
     league: "nfl",
   },
+  "401772929": {
+    sport: "football",
+    league: "nfl",
+  },
+	"401772820": {
+    sport: "football",
+    league: "nfl",
+  },
   "401752778": {
     sport: "football",
     league: "college-football",
