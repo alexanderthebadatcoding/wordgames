@@ -31,23 +31,63 @@ interface GameDataItem {
 // Configure your games data here
 // Format: { "gameId": { sport, league } }
 const gamesData: Record<string, GameDataItem> = {
-  "401810122": {
-    sport: "basketball",
-    league: "nba",
+  "740714": {
+    sport: "soccer",
+    league: "eng.1",
   },
-  "401811098": {
-    sport: "basketball",
-    league: "mens-college-basketball",
+  "736894": {
+    sport: "soccer",
+    league: "ita.1",
   },
-  "401819836": {
-    sport: "basketball",
-    league: "mens-college-basketball",
+  "760862": {
+    sport: "soccer",
+    league: "usa.1",
   },
-  "401812263": {
-    sport: "basketball",
-    league: "mens-college-basketball",
+  "760834": {
+    sport: "soccer",
+    league: "usa.1",
   },
-  "401772946": {
+  "401772780": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772781": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772782": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772888": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772887": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772886": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772779": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772784": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772783": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772890": {
+    sport: "football",
+    league: "nfl",
+  },
+  "401772889": {
     sport: "football",
     league: "nfl",
   },
@@ -55,28 +95,11 @@ const gamesData: Record<string, GameDataItem> = {
     sport: "football",
     league: "nfl",
   },
-	"401772820": {
+  "401772820": {
     sport: "football",
     league: "nfl",
   },
-  "401752778": {
-    sport: "football",
-    league: "college-football",
-  },
-  "401752911": {
-    sport: "football",
-    league: "college-football",
-  },
-  "748272": {
-    sport: "soccer",
-    league: "esp.1",
-  },
-  "740712": {
-    sport: "soccer",
-    league: "eng.1",
-  },
 };
-
 export default function App() {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
