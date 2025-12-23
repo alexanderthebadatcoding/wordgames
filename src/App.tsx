@@ -111,7 +111,7 @@ function CreatePuzzle({
       const validWords = words.filter((w) => w.trim().length > 0);
       const previewText =
         validWords.length >= 2
-          ? `${validWords[0]} → ${validWords[1]} → ...`
+          ? `${validWords[0]} → ${validWords[1]?.charAt(0)} → ...`
           : "Custom puzzle";
 
       const result = await sdk.actions.composeCast({
