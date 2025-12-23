@@ -1,0 +1,22 @@
+{
+  "frame": {
+    "name": "Before and after Game",
+    "version": "1",
+    "iconUrl": "https://bracky-games.vercel.app/icon.png",
+    "homeUrl": "https://bracky-games.vercel.app",
+    "imageUrl": "https://bracky-games.vercel.app/image.png",
+    "buttonTitle": "Play the word Game",
+    "splashImageUrl": "https://bracky-games.vercel.app/splash.png",
+    "splashBackgroundColor": "#E5E9FF",
+    "webhookUrl": "https://bracky-games.vercel.app/api/webhook",
+    "description": "Solve the word game and see how your score compares to others! Create your own word game and share it with friends! The more you play, the more you learn.",
+    "primaryCategory": "games",
+    "subtitle": "created by @gilbster",
+    "tags": ["word", "game", "challenge", "fun", "learn"]
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjMxOTA1NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDZENTEwMENEMDVlMzc4N0Q0QWQ4Qzk0NDA2QzhCNWVlMTUzOTU3MjUifQ",
+    "payload": "eyJkb21haW4iOiJicmFja3ktZ2FtZXMudmVyY2VsLmFwcCJ9",
+    "signature": "5zQCM+3IyODM9ZnB2LdEmLcYNBjipaFvcs51bvyzjvJLPgWJaEDKslP0uz2G+AnJnA/aJn9tA5zurdOkNb6jaxs="
+  }
+}
