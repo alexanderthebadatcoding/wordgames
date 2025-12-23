@@ -1,18 +1,18 @@
 {
   "frame": {
-    "name": "Before and after Game",
+    "name": "Bracky Live Score Checker",
     "version": "1",
     "iconUrl": "https://bracky-games.vercel.app/icon.png",
     "homeUrl": "https://bracky-games.vercel.app",
     "imageUrl": "https://bracky-games.vercel.app/image.png",
-    "buttonTitle": "Play the word Game",
+    "buttonTitle": "Check Live Scores",
     "splashImageUrl": "https://bracky-games.vercel.app/splash.png",
-    "splashBackgroundColor": "#E5E9FF",
+    "splashBackgroundColor": "#26334A",
     "webhookUrl": "https://bracky-games.vercel.app/api/webhook",
-    "description": "Solve the word game and see how your score compares to others! Create your own word game and share it with friends! The more you play, the more you learn.",
+    "description": "Check Live scores for bracky matchups.",
     "primaryCategory": "games",
     "subtitle": "created by @gilbster",
-    "tags": ["word", "game", "challenge", "fun", "learn"]
+    "tags": ["bracky", "sports", "scores"]
   },
   "accountAssociation": {
     "header": "eyJmaWQiOjMxOTA1NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDZENTEwMENEMDVlMzc4N0Q0QWQ4Qzk0NDA2QzhCNWVlMTUzOTU3MjUifQ",

@@ -326,7 +326,7 @@ function BeforeAfterGame({
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Type the rest..."
-                    className="flex-1 text-2xl font-semibold border-b-4 border-indigo-400 focus:border-indigo-700 outline-none px-2 py-2 text-gray-900"
+                    className="flex text-2xl font-semibold border-b-4 border-indigo-400 focus:border-indigo-700 outline-none px-2 py-2 text-gray-900"
                     autoFocus
                   />
                 </div>
